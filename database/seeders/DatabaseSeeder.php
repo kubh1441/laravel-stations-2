@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Practice;
 use App\Models\Movie;
+use App\Models\Genre;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,7 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Practice::factory(10)->create();
+        Genre::factory(5)->create();
         Movie::factory(45)->create();
+
+        $this->call([
+            SheetTableSeeder::class,
+        ]);
     }
 }

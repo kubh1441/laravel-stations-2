@@ -20,7 +20,7 @@
             </div>
             <div>
                 <label for="genre">ジャンル</label>
-                <input type="text" id="genre" name="genre">
+                <input type="text" id="genre" name="genre" value="{{$genre_name}}">
             </div>
             <div>
                 <label for="image_url">画像URL</label>

@@ -21,7 +21,6 @@ class CreateMoviesTable extends Migration
             $table->tinyInteger('is_showing')->default(false)->comment('上映中かどうか');
             $table->text('description')->comment('概要');
             $table->timestamps();
-            $table->foreignId('genre_id')->constrained();
         });
     }
 

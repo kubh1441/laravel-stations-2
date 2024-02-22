@@ -59,7 +59,7 @@ services:
         build: ./server/docker/php
         container_name: "laravel-stations-2-php"
         volumes:
-            - ./:/var/www:cached
+            - ./:/var/www:cached # : を挟んで、共有するファイルを指定してる。左がローカルで、右がコンテナ内
         depends_on:
             - composer_installation
             - yarn_installation

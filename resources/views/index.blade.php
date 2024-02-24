@@ -32,6 +32,12 @@
             <li>画像URL: {{ $movie->image_url }}</li>
             <li>created_at: {{ $movie->created_at }}</li>
             <li>updated_at: {{ $movie->updated_at }}</li>
+            <li>
+                <form action="/movies/{{ $movie->id }}" method="get">
+                    @csrf
+                    <button>detail</button>
+                </form>
+            </li>
             <br>
         @endforeach
         </ul>

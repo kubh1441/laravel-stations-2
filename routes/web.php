@@ -17,6 +17,7 @@ use App\Http\Controllers\MovieController;
 use App\Http\Controllers\AdminController;
 
 Route::get('/movies', [MovieController::class, 'index']);
+Route::get('/movies/{id}', [MovieController::class, 'detail']);
 Route::get('/sheets', [MovieController::class, 'sheets']);
 
 Route::get('admin/movies', [AdminController::class, 'index']);

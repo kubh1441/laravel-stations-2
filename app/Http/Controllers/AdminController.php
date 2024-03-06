@@ -116,16 +116,6 @@ class AdminController extends Controller
     {
         $movie = Movie::find($id);
 
-        /*
-        dd($movie->schedules);//->scheduleコレクション(あるmovieがもつscheduleインスタンス全てを入れた配列を含むインスタンス)
-        dd($movie->schedules->start_time);//こいつはエラー吐く
-        dd($movie->schedules->first());//->コレクション内の配列の先頭にあるscheduleインスタンスを取ってくる
-        */
-
-        
-        //テスト
-        //return view('test', ['movie' => $movie]);
-
         return view('admin_movies_detail', ['movie' => $movie]);
     }
 

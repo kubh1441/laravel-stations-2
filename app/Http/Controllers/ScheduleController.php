@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Movie;
 use App\Models\Schedule;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Carbon;
 
 class ScheduleController extends Controller
 {
@@ -29,17 +31,64 @@ class ScheduleController extends Controller
 
     public function store ($id, Request $request, Schedule $schedule)
     {
-        $this->validate($request, [
+        /* テストケースを見てそれ通るようにしてみた->そのテストケースが期待するのはエラーだった
+        if(Str::contains($request->start_time_time, '時') || Str::contains($request->start_time_time, '分')){
+            $start_time_time = Str::replace('時', ':', $request->start_time_time);
+            $start_time_time = Str::replace('分', '', $start_time_time);
+        }else{
+            $start_time_time = $request->start_time_time;
+        }
+        
+        if(Str::contains($request->end_time_time, '時') || Str::contains($request->end_time_time, '分')){
+            $end_time_time = Str::replace('時', ':', $request->end_time_time);
+            $end_time_time = Str::replace('分', '', $end_time_time);
+        }else{
+            $end_time_time = $request->end_time_time;
+        }
+
+        $request->merge([
+            'start_time_time' => $start_time_time,
+            'end_time_time' => $end_time_time,
+        ]);
+        */
+
+        /* こんなことしなくても、バリデーションがエラーを返してくれる
+        $startDateTime = Carbon::createFromFormat('Y/m/d H:i', $request->start_time_date . ' ' . $request->start_time_time);
+        $endDateTime = Carbon::createFromFormat('Y/m/d H:i', $request->end_time_date . ' ' . $request->end_time_time);
+
+        // Carbonがnullを返す場合は、日時文字列が正しくないことを意味する
+        if (!$startDateTime || !$endDateTime) {
+           $validator = Validator::make([], []); // 空のバリデーターを作成
+            $validator->errors()->add('invalid_datetime', '日時のフォーマットが正しくありません');
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        */
+        
+        /* 日付フォーマットに合わせたバリデーションルールを追加するべき
+        $validator = Validator::make($request->all(), [
             'movie_id' => 'required',
             'start_time_date' => 'required|string',
             'end_time_date' => 'required|string',
             'start_time_time' => 'required|string',
             'end_time_time' => 'required|string',
         ]);
+        */
+
+        $validator = Validator::make($request->all(), [
+            'movie_id' => 'required',
+            'start_time_date' => 'required|date_format:Y-m-d',
+            'end_time_date' => 'required|date_format:Y-m-d',
+            'start_time_time' => 'required|date_format:H:i',
+            'end_time_time' => 'required|date_format:H:i',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $startDateTimeString = $request->start_time_date . ' ' . $request->start_time_time;
         $endDateTimeString = $request->end_time_date . ' ' . $request->end_time_time;
-
+        
         $schedule->fill([
             'movie_id' => $id,
             'start_time' => $startDateTimeString,
@@ -61,13 +110,17 @@ class ScheduleController extends Controller
 
     public function update ($id, Request $request, Schedule $schedule)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'movie_id' => 'required',
-            'start_time_date' => 'required|string',
-            'end_time_date' => 'required|string',
-            'start_time_time' => 'required|string',
-            'end_time_time' => 'required|string',
+            'start_time_date' => 'required|date_format:Y-m-d',
+            'end_time_date' => 'required|date_format:Y-m-d',
+            'start_time_time' => 'required|date_format:H:i',
+            'end_time_time' => 'required|date_format:H:i',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $schedule = Schedule::find($id);
         if(!$schedule){

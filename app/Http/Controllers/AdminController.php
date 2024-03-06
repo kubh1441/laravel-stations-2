@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
-use App\Models\Genre;
+use App\Models\Genre; 
+use App\Models\Schedule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -110,4 +111,12 @@ class AdminController extends Controller
 
         return redirect('/admin/movies')->with('success', '映画が正常に削除されました。');
     }
+
+    public function detail($id, Movie $movie)
+    {
+        $movie = Movie::find($id);
+
+        return view('admin_movies_detail', ['movie' => $movie]);
+    }
+
 }

@@ -26,6 +26,7 @@
             <th>概要</th>
             <th>作成日</th>
             <th>更新日</th>
+            <th>詳細</th>
             <th>編集</th>
             <th>削除</th>
         </tr>
@@ -45,6 +46,7 @@
                 <td>{{ $movie->description }}</td>
                 <td>{{ $movie->created_at }}</td>
                 <td>{{ $movie->updated_at }}</td>
+                <td><a href="/admin/movies/{{$movie->id}}"><button>detail</button></a></td>
                 <td class="edit-button">
                     <form action="/admin/movies/{{ $movie->id }}/edit" method="get">
                         @csrf

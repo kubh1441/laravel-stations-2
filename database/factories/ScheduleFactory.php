@@ -16,13 +16,15 @@ class ScheduleFactory extends Factory
     public function definition()
     {
         $movieIds = Movie::pluck('id')->all();
-
         $randomMovieId = $this->faker->randomElement($movieIds);
+
+        $startTime = CarbonImmutable::now()->addHours(rand(1, 24))->addMinute(rand(0, 59))->addSecond(rand(0, 59));
+        $endTime = $startTime->copy()->addHours(2); 
 
         return [
             'movie_id' => $randomMovieId,
-            'start_time' => CarbonImmutable::now(),
-            'end_time' => CarbonImmutable::now()->addHours(2),
+            'start_time' => $startTime,/* laravelでは、carbonインスタンスを日付として自動的に解釈してDBによしなに保存してくれる */
+            'end_time' => $endTime,
         ];
     }
 }

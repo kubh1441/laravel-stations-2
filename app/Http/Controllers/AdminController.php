@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movie;
-use App\Models\Genre;
+use App\Models\Genre; 
+use App\Models\Schedule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -110,4 +111,22 @@ class AdminController extends Controller
 
         return redirect('/admin/movies')->with('success', '映画が正常に削除されました。');
     }
+
+    public function detail($id, Movie $movie)
+    {
+        $movie = Movie::find($id);
+
+        /*
+        dd($movie->schedules);//->scheduleコレクション(あるmovieがもつscheduleインスタンス全てを入れた配列を含むインスタンス)
+        dd($movie->schedules->start_time);//こいつはエラー吐く
+        dd($movie->schedules->first());//->コレクション内の配列の先頭にあるscheduleインスタンスを取ってくる
+        */
+
+        
+        //テスト
+        //return view('test', ['movie' => $movie]);
+
+        return view('admin_movies_detail', ['movie' => $movie]);
+    }
+
 }

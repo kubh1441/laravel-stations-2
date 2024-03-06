@@ -24,8 +24,8 @@
                 @endif
             </li>
             <li>概要: {{ $movie->description }}</li>
-            <li>created_at: {{ $movie->created_at->format('H:i') }}</li>
-            <li>updated_at: {{ $movie->updated_at->format('H:i') }}</li>
+            <li>created_at: {{ $movie->created_at }}</li>
+            <li>updated_at: {{ $movie->updated_at }}</li>
 
         </ul>
 
@@ -33,7 +33,7 @@
         <div class="movieSchedule">
             <ul>
                 @foreach ($schedules as $schedule)
-                    <li>[時刻] 開始時刻 : {{ $schedule->start_time->format('H:i') }}, 終了時刻 : {{ $schedule->end_time->format('H:i') }}</li>
+                    <li>[時刻] 開始時刻 : {{ $schedule->start_time }}, 終了時刻 : {{ $schedule->end_time }}</li>
                 @endforeach
             </ul>
         </div>

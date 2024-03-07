@@ -29,7 +29,6 @@ Route::patch('admin/movies/{id}/update', [AdminController::class, 'update']);
 Route::delete('admin/movies/{id}/destroy', [AdminController::class, 'delete']);
 Route::get('admin/movies/{id}', [AdminController::class, 'detail']);
 
-
 Route::get('admin/schedules', [ScheduleController::class, 'index']);
 Route::get('admin/schedules/{scheduleId}/edit', [ScheduleController::class, 'edit']);
 Route::get('/admin/movies/{id}/schedules/create', [ScheduleController::class, 'create']);

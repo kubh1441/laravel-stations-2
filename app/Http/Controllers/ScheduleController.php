@@ -31,59 +31,45 @@ class ScheduleController extends Controller
 
     public function store ($id, Request $request, Schedule $schedule)
     {
-        /* テストケースを見てそれ通るようにしてみた->そのテストケースが期待するのはエラーだった
-        if(Str::contains($request->start_time_time, '時') || Str::contains($request->start_time_time, '分')){
-            $start_time_time = Str::replace('時', ':', $request->start_time_time);
-            $start_time_time = Str::replace('分', '', $start_time_time);
-        }else{
-            $start_time_time = $request->start_time_time;
-        }
-        
-        if(Str::contains($request->end_time_time, '時') || Str::contains($request->end_time_time, '分')){
-            $end_time_time = Str::replace('時', ':', $request->end_time_time);
-            $end_time_time = Str::replace('分', '', $end_time_time);
-        }else{
-            $end_time_time = $request->end_time_time;
-        }
-
-        $request->merge([
-            'start_time_time' => $start_time_time,
-            'end_time_time' => $end_time_time,
-        ]);
-        */
-
-        /* こんなことしなくても、バリデーションがエラーを返してくれる
-        $startDateTime = Carbon::createFromFormat('Y/m/d H:i', $request->start_time_date . ' ' . $request->start_time_time);
-        $endDateTime = Carbon::createFromFormat('Y/m/d H:i', $request->end_time_date . ' ' . $request->end_time_time);
-
-        // Carbonがnullを返す場合は、日時文字列が正しくないことを意味する
-        if (!$startDateTime || !$endDateTime) {
-           $validator = Validator::make([], []); // 空のバリデーターを作成
-            $validator->errors()->add('invalid_datetime', '日時のフォーマットが正しくありません');
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-        */
-        
-        /* 日付フォーマットに合わせたバリデーションルールを追加するべき
         $validator = Validator::make($request->all(), [
             'movie_id' => 'required',
-            'start_time_date' => 'required|string',
-            'end_time_date' => 'required|string',
-            'start_time_time' => 'required|string',
-            'end_time_time' => 'required|string',
+            'start_time_date' => 'bail|required|date_format:Y-m-d|before_or_equal:end_time_date',
+            'end_time_date' => 'bail|required|date_format:Y-m-d|after_or_equal:start_time_date',
+            'start_time_time' => 'bail|required|date_format:H:i',
+            'end_time_time' => 'bail|required|date_format:H:i',                
         ]);
-        */
 
-        $validator = Validator::make($request->all(), [
-            'movie_id' => 'required',
-            'start_time_date' => 'required|date_format:Y-m-d',
-            'end_time_date' => 'required|date_format:Y-m-d',
-            'start_time_time' => 'required|date_format:H:i',
-            'end_time_time' => 'required|date_format:H:i',
-        ]);
+        $validateErrors = $validator->errors();
+
+        if(!$validateErrors->has('start_time_time') && !$validateErrors->has('end_time_time')){
+            $validator->after(function ($validator) use ($request) {
+                $start_time = Carbon::createFromFormat('H:i', $request->start_time_time);
+                $end_time = Carbon::createFromFormat('H:i', $request->end_time_time);
+  
+                $difference = $end_time->diffInMinutes($start_time);
+
+                if (($difference <= 5) && ($start_time->lt($end_time))) {
+                    $validator->errors()->add("start_time_time", "開始時間と終了時間の差が5分未満");
+                    $validator->errors()->add("end_time_time", "開始時間と終了時間の差が5分未満");
+                }
+            
+                if ($start_time->eq($end_time)) {
+                    $validator->errors()->add("start_time_time", "開始日時と終了日時が同一");
+                    $validator->errors()->add("end_time_time", "開始日時と終了日時が同一");
+                }
+            
+                if ($start_time->gt($end_time)) {
+                    $validator->errors()->add("start_time_time", "開始時刻が終了時刻より後");
+                    $validator->errors()->add("end_time_time", "開始時刻が終了時刻より後");
+                }
+            });
+        }
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect()
+            ->back()
+            ->withErrors($validator)
+            ->withInput();
         }
 
         $startDateTimeString = $request->start_time_date . ' ' . $request->start_time_time;

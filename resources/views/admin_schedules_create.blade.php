@@ -28,11 +28,11 @@
             </div>            
             <div>
                 <label for="start_time_time">開始時刻: </label>
-                <input type="time" id="start_time_time" name="start_time_time">
+                <input type="text" id="start_time_time" name="start_time_time">
             </div>
             <div>
                 <label for="end_time_time">終了時刻: </label>
-                <input type="time" id="end_time_time" name="end_time_time">
+                <input type="text" id="end_time_time" name="end_time_time">
             </div>
 
             @if (count($errors) > 0)
@@ -44,7 +44,6 @@
                     </ul>
                 </div>
             @endif
-
 
             <input type="submit" value="送信する">
         </form>

@@ -48,7 +48,7 @@
                             <p>start_time: {{ $schedule->start_time }}</p>
                             <p>end_time: {{ $schedule->end_time }}</p>
                             <form action="/admin/schedules/{{ $schedule->id }}/edit" method="get">
-                                <button>edit</button>
+                                <button type="submit">edit</button>
                             </form>
                             <form action="/admin/schedules/{{ $schedule->id }}/destroy" method="post">
                                 @method('DELETE')

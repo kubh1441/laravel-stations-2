@@ -9,6 +9,12 @@
 <body>
     <h1>映画詳細画面</h1>
 
+    @if (session('status'))
+            <div class="alert alert-msg">
+                {{ session('status') }}
+            </div>
+    @endif
+
     <div class="movieDetailContainer">
         <ul>
             <li>ID: {{ $movie->id }}</li>
@@ -33,7 +39,10 @@
         <div class="movieSchedule">
             <ul>
                 @foreach ($schedules as $schedule)
-                    <li>[時刻] 開始時刻 : {{ $schedule->start_time }}, 終了時刻 : {{ $schedule->end_time }}</li>
+                    <li>開始時刻 : {{ $schedule->start_time }}, 終了時刻 : {{ $schedule->end_time }}</li>
+                    <a href="/movies/{{ $movie->id }}/schedules/{{ $schedule->id }}/sheets?date={{ $schedule->start_time->format('Y-m-d') }}">
+                        <button type="submit">座席を予約する</button>
+                    </a>
                 @endforeach
             </ul>
         </div>

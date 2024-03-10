@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Sheet extends Model
 {
     use HasFactory;
+
+    public function reservation()
+    {
+        return $this->hasOne(Reservation::class);
+    }
 }

@@ -28,6 +28,7 @@ class MovieController extends Controller
     {
         $movie = Movie::find($id);
         $schedules = Schedule::where('movie_id', $id)->orderBy('start_time', 'asc')->get();
+        
         return view('detail', ['movie' => $movie, 'schedules' => $schedules]);
     }
 }

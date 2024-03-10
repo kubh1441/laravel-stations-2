@@ -16,10 +16,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\ReservationController;
 
 Route::get('/movies', [MovieController::class, 'index']);
 Route::get('/movies/{id}', [MovieController::class, 'detail']);
 Route::get('/sheets', [MovieController::class, 'sheets']);
+
+Route::get('/movies/{movie_id}/schedules/{schedule_id}/sheets', [ReservationController::class, 'sheets']);
+Route::get('/movies/{movie_id}/schedules/{schedule_id}/reservations/create', [ReservationController::class, 'create']);
+Route::post('/reservations/store', [ReservationController::class, 'store']);
 
 Route::get('admin/movies', [AdminController::class, 'index']);
 Route::get('admin/movies/create', [AdminController::class, 'create']);

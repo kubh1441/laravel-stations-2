@@ -35,7 +35,7 @@
             <li>
                 <form action="/movies/{{ $movie->id }}" method="get">
                     @csrf
-                    <button>detail</button>
+                    <button type="submit">detail</button>
                 </form>
             </li>
             <br>

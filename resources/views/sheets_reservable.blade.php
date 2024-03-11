@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Movies</title>
+    <title>Sheets</title>
 </head>
 <body>
     <h1>座席表</h1>
@@ -30,7 +30,11 @@
                     <tr align="center">
                 @endif
 
-                <td><a href="/movies/{{$movie_id}}/schedules/{{$schedule_id}}/reservations/create?date={{ $date->format('Y-m-d') }}&sheetId={{ $sheet->id }}">{{ $sheet->row }}-{{ $sheet->column }}</a></td>
+                @if ($reserved_sheet_Ids->contains($sheet->id))
+                    <td style="background-color: gray">{{ $sheet->row }}-{{ $sheet->column }}</td>
+                @else
+                    <td><a href="/movies/{{$movie_id}}/schedules/{{$schedule_id}}/reservations/create?date={{ $date->format('Y-m-d') }}&sheetId={{ $sheet->id }}">{{ $sheet->row }}-{{ $sheet->column }}</a></td>
+                @endif
 
                 @if( ($sheet->id % $num_of_column) === 0)
                     </tr>
@@ -38,5 +42,6 @@
             @endforeach
         </table>
     </div>
+
 </body>
 </html>

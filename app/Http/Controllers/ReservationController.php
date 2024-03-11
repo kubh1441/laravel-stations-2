@@ -19,16 +19,26 @@ class ReservationController extends Controller
             abort(400, 'Bad Request');
         }
 
-        $sheets = Sheet::all();
-
-        //ここで$dateをcarbonインスタンスに書き換える処理が欲しい
         $carbonDate = Carbon::parse($date);
 
-        return view('sheets_reservable', ['sheets' => $sheets, 'num_of_column' => $sheets->max('column'), 'movie_id' => $movie_id, 'schedule_id' => $schedule_id, 'date' => $carbonDate]);
+        $sheets = Sheet::all();
+        
+        $reserved_sheet_Ids = Reservation::where('schedule_id', $schedule_id)->pluck('sheet_id');
+
+        return view('sheets_reservable', ['sheets' => $sheets, 'num_of_column' => $sheets->max('column'), 'movie_id' => $movie_id, 'schedule_id' => $schedule_id, 'date' => $carbonDate, 'reserved_sheet_Ids' => $reserved_sheet_Ids]);
     }
 
     public function create ($movie_id, $schedule_id, Request $request)
     {
+        $requestDate = $request->query('date');
+        $requestSheetId = $request->query('sheetId');
+
+        $reservation = Reservation::where('date', $requestDate)->orWhere('sheet_id', $requestSheetId)->first();
+
+        if($reservation){
+            abort(400, 'Bad Request');
+        }
+
         if(!$request->query('date') || !$request->query('sheetId')){
             abort(400, 'Bad Request');
         }
@@ -38,7 +48,7 @@ class ReservationController extends Controller
 
     public function store (Request $request, Reservation $reservation)
     {
-
+        //バリデーションチェック
         $validator = Validator::make($request->all(), [
             'date' => 'bail|required|date_format:Y-m-d',
             'schedule_id' => 'bail|required',
